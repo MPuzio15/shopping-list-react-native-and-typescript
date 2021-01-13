@@ -12,7 +12,6 @@ import Input from './src/components/input';
 import addIcon from './src/icons/add.png';
 import icon from './src/icons/search.png';
 import {Item, Items} from './src/data/data';
-import ListItem from './src/components/listItem';
 import AppButton from './src/components/appButton';
 
 const App: FC = () => {
@@ -29,7 +28,6 @@ const App: FC = () => {
       }
     })();
   }, [setItemsList]);
-  console.log('items: ', itemsList);
 
   const handleSearch = (text: string) => {
     if (Items !== null) {
@@ -55,11 +53,10 @@ const App: FC = () => {
   const handleItemBought = (newItem: Item) => {
     if (newItem !== null && itemsList !== null) {
       const items = [...itemsList];
-      console.log('New: ', newItem);
       items[newItem.id].bought = !items[newItem.id].bought;
       setItemsList(items);
     } else {
-      console.log('jest null');
+      console.log('Nothing to change');
     }
   };
   return (
