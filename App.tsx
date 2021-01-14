@@ -22,7 +22,7 @@ const App: FC = () => {
   const [inputQuantity, setInputQuantity] = useState<string>('');
 
   useEffect(() => {
-    (async () => {
+    (() => {
       if (Items !== null) {
         setItemsList(Items);
       }
@@ -37,7 +37,7 @@ const App: FC = () => {
       setItemsList(itemsList);
     }
   };
-
+  console.log('id', typeof (itemsList ? itemsList.length - 1 : null));
   const handleAdd = async () => {
     const changedItem = await newItem;
     const list = await itemsList;
@@ -57,6 +57,17 @@ const App: FC = () => {
       setItemsList(items);
     } else {
       console.log('Nothing to change');
+    }
+  };
+
+  const handleRemoveDone = () => {
+    if (itemsList !== null) {
+      const items = [...itemsList];
+      const filtered = items.filter((element) => element.bought === false);
+      filtered.map((el, index) => {
+        el.id = index;
+      });
+      setItemsList(filtered);
     }
   };
   return (
@@ -84,18 +95,30 @@ const App: FC = () => {
                 <Text
                   style={[
                     styles.text,
-                    {color: item.bought ? 'gray' : 'black'},
+                    {
+                      color: item.bought ? 'gray' : 'black',
+                      textDecorationLine: item.bought ? 'line-through' : 'none',
+                    },
                   ]}>
                   {item.name}
                 </Text>
               </View>
               <View>
-                <Text style={styles.text}>{item.quantity}</Text>
+                <Text
+                  style={[
+                    styles.text,
+                    {
+                      color: item.bought ? 'gray' : 'black',
+                      textDecorationLine: item.bought ? 'line-through' : 'none',
+                    },
+                  ]}>
+                  {item.quantity}
+                </Text>
               </View>
             </TouchableOpacity>
           )}
         />
-        <View style={{flex: 0.5, display: !inputShown ? 'flex' : 'none'}}>
+        <View style={{flex: 0.5, display: inputShown ? 'flex' : 'none'}}>
           <Input
             value={inputName}
             icon={addIcon}
@@ -106,9 +129,10 @@ const App: FC = () => {
               setInputName(text);
               if (newItem !== null) {
                 setNewItem({...newItem, name: text});
-              } else {
+              } else if (newItem == null && itemsList !== null) {
+                console.log('else w  name');
                 setNewItem({
-                  id: Date.now(),
+                  id: itemsList ? itemsList.length - 1 : 0,
                   name: text,
                   quantity: 1,
                   bought: false,
@@ -128,8 +152,9 @@ const App: FC = () => {
               if (newItem !== null) {
                 setNewItem({...newItem, quantity: stingQty});
               } else {
+                console.log('else w qty');
                 setNewItem({
-                  id: Date.now(),
+                  id: itemsList ? itemsList.length - 1 : 0,
                   name: '',
                   quantity: stingQty,
                   bought: false,
@@ -138,12 +163,20 @@ const App: FC = () => {
             }}
           />
         </View>
-        <AppButton
-          placeholder={'ADD'}
-          onPress={() => {
-            setInputShown(true), handleAdd();
-          }}
-        />
+        <View style={styles.buttonsContainer}>
+          <AppButton
+            placeholder={'DODAJ NOWY'}
+            onPress={() => {
+              setInputShown(true), handleAdd();
+            }}
+          />
+          <AppButton
+            placeholder={'USUŃ KUPIONE'}
+            onPress={() => {
+              handleRemoveDone();
+            }}
+          />
+        </View>
       </SafeAreaView>
     </>
   );
@@ -163,6 +196,12 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: '100%',
   },
 });
 
