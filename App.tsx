@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
 import Input from './src/components/input';
 import addIcon from './src/icons/add.png';
 import icon from './src/icons/search.png';
@@ -126,7 +128,12 @@ const App: FC = () => {
             </TouchableOpacity>
           )}
         />
-        <View style={{flex: 0.5, display: inputShown ? 'flex' : 'none'}}>
+        <KeyboardAwareScrollView
+          contentContainerStyle={{
+            flex: 0.5,
+            display: inputShown ? 'flex' : 'none',
+            justifyContent: 'space-around',
+          }}>
           <Input
             value={inputName}
             icon={addIcon}
@@ -170,7 +177,7 @@ const App: FC = () => {
               }
             }}
           />
-        </View>
+        </KeyboardAwareScrollView>
         <View style={styles.buttonsContainer}>
           <AppButton
             placeholder={'DODAJ NOWY'}
