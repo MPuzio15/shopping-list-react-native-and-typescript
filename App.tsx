@@ -37,14 +37,21 @@ const App: FC = () => {
       setItemsList(itemsList);
     }
   };
-  console.log('id', typeof (itemsList ? itemsList.length - 1 : null));
   const handleAdd = async () => {
     const changedItem = await newItem;
     const list = await itemsList;
-    if (changedItem !== null && list !== null)
-      setItemsList([...list, changedItem]);
-    else if (newItem !== null && itemsList == null) {
-      setItemsList([newItem]);
+    if (changedItem !== null && list !== null) {
+      const itemToSet: Item = {
+        id: list?.length,
+        name: changedItem?.name,
+        quantity: changedItem?.quantity,
+        bought: false,
+      };
+      if (list !== null) {
+        setItemsList([...list, itemToSet]);
+      } else {
+        setItemsList([itemToSet]);
+      }
     }
     setInputName('');
     setInputQuantity('');
@@ -70,6 +77,7 @@ const App: FC = () => {
       setItemsList(filtered);
     }
   };
+  console.log(itemsList);
   return (
     <>
       <StatusBar barStyle="dark-content" />
